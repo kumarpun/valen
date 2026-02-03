@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Will You Work?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .container {
+            text-align: center;
+            padding: 60px 80px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            min-width: 500px;
+            min-height: 350px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .question {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 50px;
+            font-weight: 600;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 18px 55px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            position: fixed;
+            z-index: 1000;
+            pointer-events: auto;
+        }
+
+        .congrats {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .congrats h1 {
+            font-size: 3rem;
+            color: #11998e;
+            margin-bottom: 20px;
+            animation: bounce 0.6s ease infinite;
+        }
+
+        .congrats p {
+            font-size: 1.3rem;
+            color: #666;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        .emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .congrats-gif {
+            max-width: 300px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 600px) {
+            .container {
+                min-width: 90vw;
+                min-height: 300px;
+                padding: 40px 30px;
+                margin: 20px;
+            }
+
+            .question {
+                font-size: 1.8rem;
+                margin-bottom: 40px;
+            }
+
+            .btn {
+                padding: 15px 40px;
+                font-size: 1.1rem;
+            }
+
+            .congrats h1 {
+                font-size: 2rem;
+            }
+
+            .congrats p {
+                font-size: 1rem;
+            }
+
+            .emoji {
+                font-size: 3rem;
+            }
+
+            .congrats-gif {
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="question-section" id="questionSection">
+            <h1 class="question">Rubiya will you be my valentine?</h1>
+            <div class="buttons">
+                <button class="btn btn-yes" onclick="sayYes()">Yes</button>
+                <div style="width: 120px;"></div>
+            </div>
+        </div>
+        <div class="congrats" id="congrats">
+            <h1>YAY! 🎉</h1>
+            <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXdrampydzlobHp4ZXhsaTUyNnh2MDg0dmZ6emcwazBtajlwZ2l0dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0IsHU6DASJRBg9e8/giphy.gif" alt="Celebration" class="congrats-gif">
+        </div>
+    </div>
+    <button class="btn btn-no" id="noBtn">No</button>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const questionSection = document.getElementById('questionSection');
+        const congratsSection = document.getElementById('congrats');
+        const container = document.getElementById('container');
+
+        let buttonRect = noBtn.getBoundingClientRect();
+        const escapeDistance = 150; // Distance at which button starts escaping
+
+        // Position the No button initially
+        function initButtonPosition() {
+            const containerRect = container.getBoundingClientRect();
+            const yesBtn = document.querySelector('.btn-yes');
+            const yesBtnRect = yesBtn.getBoundingClientRect();
+
+            noBtn.style.left = (yesBtnRect.right + 40) + 'px';
+            noBtn.style.top = yesBtnRect.top + 'px';
+            buttonRect = noBtn.getBoundingClientRect();
+        }
+
+        window.addEventListener('load', initButtonPosition);
+        window.addEventListener('resize', initButtonPosition);
+
+        // Track mouse/touch position and move button away
+        function handlePointerMove(clientX, clientY) {
+            buttonRect = noBtn.getBoundingClientRect();
+
+            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+
+            const distX = clientX - buttonCenterX;
+            const distY = clientY - buttonCenterY;
+            const distance = Math.sqrt(distX * distX + distY * distY);
+
+            if (distance < escapeDistance) {
+                moveButtonAway(clientX, clientY);
+            }
+        }
+
+        function moveButtonAway(pointerX, pointerY) {
+            buttonRect = noBtn.getBoundingClientRect();
+
+            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+
+            // Calculate direction away from pointer
+            let dirX = buttonCenterX - pointerX;
+            let dirY = buttonCenterY - pointerY;
+
+            // Normalize and multiply by escape distance
+            const length = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
+            dirX = (dirX / length) * 200;
+            dirY = (dirY / length) * 200;
+
+            // Add some randomness
+            dirX += (Math.random() - 0.5) * 100;
+            dirY += (Math.random() - 0.5) * 100;
+
+            let newX = buttonRect.left + dirX;
+            let newY = buttonRect.top + dirY;
+
+            // Keep within viewport bounds
+            const padding = 20;
+            const maxX = window.innerWidth - buttonRect.width - padding;
+            const maxY = window.innerHeight - buttonRect.height - padding;
+
+            newX = Math.max(padding, Math.min(newX, maxX));
+            newY = Math.max(padding, Math.min(newY, maxY));
+
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+        }
+
+        // Mouse events
+        document.addEventListener('mousemove', (e) => {
+            handlePointerMove(e.clientX, e.clientY);
+        });
+
+        // Touch events for mobile
+        document.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            handlePointerMove(touch.clientX, touch.clientY);
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            handlePointerMove(touch.clientX, touch.clientY);
+        }, { passive: true });
+
+        // Prevent clicking the No button
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButtonAway(e.clientX, e.clientY);
+        });
+
+        noBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            if (e.changedTouches[0]) {
+                moveButtonAway(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+            }
+        });
+
+        function sayYes() {
+            questionSection.style.display = 'none';
+            congratsSection.style.display = 'flex';
+            noBtn.style.display = 'none';
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#88ff00'];
+
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 30);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,317 +1,998 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Will You Work?</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nepal Election Results 2082 (2026) - Live Updates</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
+    :root {
+      --primary: #dc143c;
+      --primary-dark: #a00f2e;
+      --blue: #003893;
+      --bg: #f0f2f5;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --text-light: #6b7280;
+      --border: #e5e7eb;
+      --green: #10b981;
+      --orange: #f59e0b;
+    }
 
-        .container {
-            text-align: center;
-            padding: 60px 80px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            min-width: 500px;
-            min-height: 350px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-        .question {
-            font-size: 2.5rem;
-            color: #333;
-            margin-bottom: 50px;
-            font-weight: 600;
-        }
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
 
-        .buttons {
-            display: flex;
-            gap: 40px;
-            justify-content: center;
-            align-items: center;
-            min-height: 60px;
-        }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
 
-        .btn {
-            padding: 18px 55px;
-            font-size: 1.3rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+    .header h1 { font-size: 1.5rem; font-weight: 700; }
 
-        .btn-yes {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-        }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
 
-        .btn-yes:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(17, 153, 142, 0.4);
-        }
+    .live-dot {
+      width: 8px; height: 8px;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
 
-        .btn-no {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            color: white;
-            position: fixed;
-            z-index: 1000;
-            pointer-events: auto;
-        }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
 
-        .congrats {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
+    .header-meta { font-size: 0.85rem; opacity: 0.9; }
 
-        .congrats h1 {
-            font-size: 3rem;
-            color: #11998e;
-            margin-bottom: 20px;
-            animation: bounce 0.6s ease infinite;
-        }
+    .flag-bar {
+      height: 4px;
+      background: linear-gradient(90deg, var(--blue) 50%, var(--primary) 50%);
+    }
 
-        .congrats p {
-            font-size: 1.3rem;
-            color: #666;
-        }
+    /* Ticker */
+    .ticker-wrap {
+      background: var(--blue);
+      color: white;
+      padding: 8px 0;
+      overflow: hidden;
+      font-size: 0.85rem;
+    }
 
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            top: -10px;
-            animation: fall linear forwards;
-            pointer-events: none;
-        }
+    .ticker {
+      display: flex;
+      animation: scroll 35s linear infinite;
+      white-space: nowrap;
+    }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+    .ticker span { padding: 0 2rem; }
 
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(720deg);
-            }
-        }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
 
-        .emoji {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
 
-        .congrats-gif {
-            max-width: 300px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
 
-        /* Mobile styles */
-        @media (max-width: 600px) {
-            .container {
-                min-width: 90vw;
-                min-height: 300px;
-                padding: 40px 30px;
-                margin: 20px;
-            }
+    .stat-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-left: 4px solid var(--primary);
+    }
 
-            .question {
-                font-size: 1.8rem;
-                margin-bottom: 40px;
-            }
+    .stat-card.blue { border-left-color: var(--blue); }
+    .stat-card.green { border-left-color: var(--green); }
+    .stat-card.orange { border-left-color: var(--orange); }
+    .stat-card.purple { border-left-color: #8b5cf6; }
 
-            .btn {
-                padding: 15px 40px;
-                font-size: 1.1rem;
-            }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
 
-            .congrats h1 {
-                font-size: 2rem;
-            }
+    .stat-value { font-size: 1.8rem; font-weight: 700; }
+    .stat-sub { font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem; }
 
-            .congrats p {
-                font-size: 1rem;
-            }
+    /* Section titles */
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-            .emoji {
-                font-size: 3rem;
-            }
+    .section-title .badge {
+      font-size: 0.7rem;
+      background: var(--primary);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
 
-            .congrats-gif {
-                max-width: 200px;
-            }
-        }
-    </style>
+    /* Results table */
+    .results-section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .results-table th {
+      background: #f8f9fa;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .results-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    .results-table tr:hover { background: #f8f9fa; }
+
+    .party-badge {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .bar-cell { min-width: 150px; }
+
+    .bar-bg {
+      background: #f0f0f0;
+      border-radius: 4px;
+      height: 22px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s ease;
+      display: flex;
+      align-items: center;
+      padding-left: 6px;
+      font-size: 0.75rem;
+      color: white;
+      font-weight: 600;
+    }
+
+    /* Constituency cards */
+    .constituency-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+
+    .constituency-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .constituency-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .constituency-status {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .status-elected { background: #d1fae5; color: #065f46; }
+    .status-leading { background: #fef3c7; color: #92400e; }
+    .status-counting { background: #e0e7ff; color: #3730a3; }
+
+    .candidate-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .candidate-row:last-child { border-bottom: none; }
+
+    .candidate-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .candidate-rank {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .candidate-name { font-size: 0.9rem; font-weight: 500; }
+    .candidate-party { font-size: 0.75rem; color: var(--text-light); }
+    .candidate-votes { font-weight: 700; font-size: 0.9rem; }
+
+    /* Source banners */
+    .sources-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .source-banner {
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      color: white;
+    }
+
+    .source-banner.instagram {
+      background: linear-gradient(135deg, #405de6, #833ab4, #c13584, #e1306c);
+    }
+
+    .source-banner.ekantipur {
+      background: linear-gradient(135deg, #1a365d, #2563eb);
+    }
+
+    .source-banner strong { font-size: 0.95rem; }
+    .source-banner p { font-size: 0.8rem; opacity: 0.9; }
+
+    .source-banner a {
+      background: white;
+      padding: 6px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: transform 0.2s;
+      white-space: nowrap;
+    }
+
+    .source-banner.instagram a { color: #833ab4; }
+    .source-banner.ekantipur a { color: #1a365d; }
+    .source-banner a:hover { transform: scale(1.05); }
+
+    /* Province table */
+    .province-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .province-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .province-card .name { font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.25rem; }
+    .province-card .seats { font-size: 1.3rem; font-weight: 700; color: var(--blue); }
+    .province-card .label { font-size: 0.7rem; color: var(--text-light); }
+
+    /* Refresh bar */
+    .refresh-bar {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .refresh-bar button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .refresh-bar button:hover { background: var(--primary-dark); }
+
+    .countdown { font-weight: 600; color: var(--primary); }
+
+    /* Feed */
+    .feed-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .instagram-post {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .instagram-post iframe { width: 100% !important; min-width: 0 !important; }
+    .instagram-post blockquote { margin: 0 !important; border: none !important; max-width: 100% !important; min-width: 0 !important; }
+
+    /* Ekantipur iframe */
+    .iframe-section {
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    .iframe-header {
+      padding: 0.75rem 1.25rem;
+      background: #f8f9fa;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .iframe-header span { font-weight: 600; font-size: 0.9rem; }
+
+    .iframe-header a {
+      color: var(--blue);
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .iframe-container {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+
+    .iframe-fallback {
+      padding: 2rem;
+      text-align: center;
+      display: none;
+    }
+
+    .iframe-fallback a {
+      display: inline-block;
+      margin-top: 0.75rem;
+      background: var(--blue);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-light);
+      font-size: 0.8rem;
+    }
+
+    .footer a { color: var(--blue); }
+
+    /* Majority line */
+    .majority-marker {
+      position: relative;
+      margin: 1rem 0;
+      height: 40px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .majority-segment {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: white;
+      transition: width 0.8s ease;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .majority-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #1a1a2e;
+      z-index: 2;
+    }
+
+    .majority-label {
+      position: absolute;
+      left: 50%;
+      top: -18px;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: var(--text-light);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 1.1rem; }
+      .header-inner { padding: 0 1rem; }
+      .container { padding: 1rem; }
+      .stat-value { font-size: 1.3rem; }
+      .stat-card { padding: 0.85rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+      .sources-row { grid-template-columns: 1fr; gap: 0.6rem; }
+      .source-banner { padding: 0.85rem 1rem; }
+      .constituency-grid { grid-template-columns: 1fr; }
+      .feed-grid { grid-template-columns: 1fr; }
+      .results-section { padding: 1rem; }
+      .results-table th, .results-table td { padding: 0.4rem 0.5rem; font-size: 0.8rem; }
+      .bar-cell { min-width: 80px; }
+      .iframe-container { height: 450px; }
+      .province-grid { grid-template-columns: repeat(2, 1fr); }
+      .refresh-bar { padding: 0.6rem 1rem; font-size: 0.8rem; }
+    }
+
+    @media (max-width: 768px) {
+      .tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 0;
+      }
+      .tabs::-webkit-scrollbar { display: none; }
+      .tab {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .header h1 { font-size: 0.95rem; }
+      .stat-value { font-size: 1.1rem; }
+      .stat-label { font-size: 0.65rem; }
+      .stat-sub { font-size: 0.7rem; }
+      .stat-card { padding: 0.65rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      .section-title { font-size: 1rem; }
+      .candidate-name { font-size: 0.8rem; }
+      .candidate-votes { font-size: 0.8rem; }
+      .constituency-card { padding: 0.75rem; }
+      .province-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      .province-card .seats { font-size: 1.1rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container" id="container">
-        <div class="question-section" id="questionSection">
-            <h1 class="question">Will you be my valentine?</h1>
-            <div class="buttons">
-                <button class="btn btn-yes" onclick="sayYes()">Yes</button>
-                <div style="width: 120px;"></div>
-            </div>
-        </div>
-        <div class="congrats" id="congrats">
-            <h1>YAY! 🎉</h1>
-            <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXdrampydzlobHp4ZXhsaTUyNnh2MDg0dmZ6emcwazBtajlwZ2l0dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0IsHU6DASJRBg9e8/giphy.gif" alt="Celebration" class="congrats-gif">
-        </div>
+
+  <!-- Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>Nepal Federal Parliament Election 2082 (2026) - Live counting in progress</span>
+      <span>RSP leading in 109 constituencies | NC won 3, leading 13 | CPN-UML leading 12</span>
+      <span>Data from ekantipur.com & @routineofnepalbanda</span>
+      <span>Nepal Federal Parliament Election 2082 (2026) - Live counting in progress</span>
+      <span>RSP leading in 109 constituencies | NC won 3, leading 13 | CPN-UML leading 12</span>
+      <span>Data from ekantipur.com & @routineofnepalbanda</span>
     </div>
-    <button class="btn btn-no" id="noBtn">No</button>
+  </div>
 
-    <script>
-        const noBtn = document.getElementById('noBtn');
-        const questionSection = document.getElementById('questionSection');
-        const congratsSection = document.getElementById('congrats');
-        const container = document.getElementById('container');
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <h1>Nepal Election Results 2082</h1>
+      <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+        <span class="live-badge"><span class="live-dot"></span> LIVE</span>
+        <span class="header-meta" id="lastUpdated">Last updated: --</span>
+      </div>
+    </div>
+  </header>
+  <div class="flag-bar"></div>
 
-        let buttonRect = noBtn.getBoundingClientRect();
-        const escapeDistance = 150; // Distance at which button starts escaping
+  <div class="container">
 
-        // Position the No button initially
-        function initButtonPosition() {
-            const containerRect = container.getBoundingClientRect();
-            const yesBtn = document.querySelector('.btn-yes');
-            const yesBtnRect = yesBtn.getBoundingClientRect();
+    <!-- Refresh bar -->
+    <div class="refresh-bar">
+      <span>Auto-refresh in <span class="countdown" id="countdown">5:00</span></span>
+      <div>
+        <button onclick="location.reload()">Refresh Now</button>
+      </div>
+    </div>
 
-            noBtn.style.left = (yesBtnRect.right + 40) + 'px';
-            noBtn.style.top = yesBtnRect.top + 'px';
-            buttonRect = noBtn.getBoundingClientRect();
-        }
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">FPTP Seats</div>
+        <div class="stat-value" id="totalSeats">165</div>
+        <div class="stat-sub">Direct election</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Results Declared</div>
+        <div class="stat-value" id="declared">8</div>
+        <div class="stat-sub" id="declaredSub">of 165 FPTP seats</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Won + Leading</div>
+        <div class="stat-value" id="leadingCount">--</div>
+        <div class="stat-sub">Counting in progress</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Total Parties</div>
+        <div class="stat-value">67</div>
+        <div class="stat-sub">Contesting</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-label">Majority Mark</div>
+        <div class="stat-value">138</div>
+        <div class="stat-sub">of 275 total seats</div>
+      </div>
+    </div>
 
-        window.addEventListener('load', initButtonPosition);
-        window.addEventListener('resize', initButtonPosition);
+    <!-- Source banners -->
+    <div class="sources-row">
+      <div class="source-banner ekantipur">
+        <div>
+          <strong>eKantipur Election</strong>
+          <p>Official results tracker</p>
+        </div>
+        <a href="https://election.ekantipur.com/?lng=eng" target="_blank" rel="noopener">Open Live</a>
+      </div>
+      <div class="source-banner instagram">
+        <div>
+          <strong>@routineofnepalbanda</strong>
+          <p>Instagram live coverage</p>
+        </div>
+        <a href="https://www.instagram.com/routineofnepalbanda/?hl=en" target="_blank" rel="noopener">View</a>
+      </div>
+    </div>
 
-        // Track mouse/touch position and move button away
-        function handlePointerMove(clientX, clientY) {
-            buttonRect = noBtn.getBoundingClientRect();
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="results">Party Results</div>
+      <div class="tab" data-tab="constituencies">Key Constituencies</div>
+      <div class="tab" data-tab="ekantipur">eKantipur Live</div>
+      <div class="tab" data-tab="provinces">Province Breakdown</div>
+      <div class="tab" data-tab="instagram">Instagram Feed</div>
+    </div>
 
-            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+    <!-- Tab: Party Results -->
+    <div class="tab-content active" id="tab-results">
+      <!-- Majority bar -->
+      <div class="results-section" style="padding-bottom:2rem;">
+        <h2 class="section-title">Seat Share <span class="badge">FPTP</span></h2>
+        <div style="position:relative; margin-top:1.5rem;">
+          <div class="majority-label">Majority: 138 seats</div>
+          <div class="majority-marker" id="majorityBar"></div>
+        </div>
+      </div>
 
-            const distX = clientX - buttonCenterX;
-            const distY = clientY - buttonCenterY;
-            const distance = Math.sqrt(distX * distX + distY * distY);
+      <div class="results-section">
+        <h2 class="section-title">Party-wise Results <span class="badge">LIVE</span></h2>
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Party</th>
+              <th>Won</th>
+              <th>Leading</th>
+              <th>Total</th>
+              <th class="bar-cell">Seats</th>
+            </tr>
+          </thead>
+          <tbody id="partyResults"></tbody>
+        </table>
+      </div>
+    </div>
 
-            if (distance < escapeDistance) {
-                moveButtonAway(clientX, clientY);
-            }
-        }
+    <!-- Tab: Key Constituencies -->
+    <div class="tab-content" id="tab-constituencies">
+      <div class="results-section" style="background:transparent;box-shadow:none;padding:0;">
+        <h2 class="section-title">Key Constituency Battles <span class="badge">LIVE</span></h2>
+        <div class="constituency-grid" id="constituencyGrid"></div>
+      </div>
+    </div>
 
-        function moveButtonAway(pointerX, pointerY) {
-            buttonRect = noBtn.getBoundingClientRect();
+    <!-- Tab: Province Breakdown -->
+    <div class="tab-content" id="tab-provinces">
+      <div class="results-section">
+        <h2 class="section-title">Province-wise FPTP Seats</h2>
+        <div class="province-grid" id="provinceGrid"></div>
+      </div>
+    </div>
 
-            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+    <!-- Tab: eKantipur Live -->
+    <div class="tab-content" id="tab-ekantipur">
+      <div class="iframe-section">
+        <div class="iframe-header">
+          <span>eKantipur Election Results</span>
+          <a href="https://election.ekantipur.com/?lng=eng" target="_blank" rel="noopener">Open in new tab</a>
+        </div>
+        <iframe id="ekantipurFrame" class="iframe-container" src="https://election.ekantipur.com/?lng=eng" loading="lazy"></iframe>
+      </div>
+    </div>
 
-            // Calculate direction away from pointer
-            let dirX = buttonCenterX - pointerX;
-            let dirY = buttonCenterY - pointerY;
+    <!-- Tab: Instagram Feed -->
+    <div class="tab-content" id="tab-instagram">
+      <div class="iframe-section">
+        <div class="iframe-header">
+          <span>@routineofnepalbanda - Election Coverage</span>
+          <a href="https://www.instagram.com/routineofnepalbanda/?hl=en" target="_blank" rel="noopener">Open Instagram</a>
+        </div>
+        <iframe id="instaFrame" class="iframe-container" src="https://www.instagram.com/routineofnepalbanda/?hl=en" loading="lazy" style="height:700px;"></iframe>
+        <div class="iframe-fallback" id="instaFallback">
+          <div style="padding:2rem 1rem; text-align:center;">
+            <div style="font-size:3rem; margin-bottom:1rem;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c13584" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </div>
+            <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">@routineofnepalbanda</h3>
+            <p style="color:var(--text-light); margin-bottom:0.75rem;">Routine of Nepal (RONB) - Live Election Coverage</p>
+            <p style="color:var(--text-light); font-size:0.85rem; margin-bottom:1.25rem;">Instagram does not allow embedding. Open the page directly to see latest election updates.</p>
+            <a href="https://www.instagram.com/routineofnepalbanda/?hl=en" target="_blank" rel="noopener" style="display:inline-block; background:linear-gradient(135deg, #405de6, #833ab4, #c13584, #e1306c); color:white; padding:12px 28px; border-radius:10px; text-decoration:none; font-weight:600; font-size:0.95rem;">Open on Instagram</a>
+          </div>
+        </div>
+      </div>
+      <!-- Manual post embeds if any -->
+      <div class="feed-grid" id="feedGrid" style="margin-top:1rem;"></div>
+    </div>
 
-            // Normalize and multiply by escape distance
-            const length = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
-            dirX = (dirX / length) * 200;
-            dirY = (dirY / length) * 200;
+  </div>
 
-            // Add some randomness
-            dirX += (Math.random() - 0.5) * 100;
-            dirY += (Math.random() - 0.5) * 100;
+  <footer class="footer">
+    <p>Data sourced from <a href="https://election.ekantipur.com/?lng=eng" target="_blank">eKantipur</a> & <a href="https://www.instagram.com/routineofnepalbanda/?hl=en" target="_blank">@routineofnepalbanda</a></p>
+    <p style="margin-top:0.25rem;">Unofficial tracker. For official results visit the Election Commission of Nepal.</p>
+  </footer>
 
-            let newX = buttonRect.left + dirX;
-            let newY = buttonRect.top + dirY;
+  <script async src="//www.instagram.com/embed.js"></script>
 
-            // Keep within viewport bounds
-            const padding = 20;
-            const maxX = window.innerWidth - buttonRect.width - padding;
-            const maxY = window.innerHeight - buttonRect.height - padding;
+  <script>
+    // ============================================================
+    // ELECTION DATA - Update with latest results from ekantipur
+    // ============================================================
+    const electionData = {
+      lastUpdated: "2026-03-06, Counting in progress",
+      totalFPTP: 165,
+      declared: 8,
+      parties: [
+        { name: "Rastriya Swatantra Party (RSP)", color: "#00a86b", won: 4, leading: 109 },
+        { name: "Nepali Congress (NC)", color: "#dc143c", won: 3, leading: 13 },
+        { name: "CPN-UML", color: "#003893", won: 0, leading: 12 },
+        { name: "Nepali Communist Party", color: "#cc0000", won: 1, leading: 8 },
+        { name: "Shram Sanskriti Party", color: "#7c3aed", won: 0, leading: 6 },
+        { name: "Rastriya Prajatantra Party (RPP)", color: "#ff8c00", won: 0, leading: 1 },
+        { name: "Janata Samajbadi Party", color: "#06b6d4", won: 0, leading: 0 },
+        { name: "Others / Independent", color: "#6b7280", won: 0, leading: 0 },
+      ],
 
-            newX = Math.max(padding, Math.min(newX, maxX));
-            newY = Math.max(padding, Math.min(newY, maxY));
+      // Key constituency battles
+      constituencies: [
+        {
+          name: "Chitwan-2",
+          status: "leading",
+          candidates: [
+            { name: "Rabi Lamichhane", party: "RSP", votes: "26,120", color: "#00a86b", rank: 1 },
+            { name: "Meena Kumari Kharel", party: "NC", votes: "7,347", color: "#dc143c", rank: 2 },
+          ]
+        },
+        {
+          name: "Jhapa-5",
+          status: "leading",
+          candidates: [
+            { name: "Balendra Shah", party: "RSP", votes: "15,169", color: "#00a86b", rank: 1 },
+            { name: "KP Sharma Oli", party: "CPN-UML", votes: "3,344", color: "#003893", rank: 2 },
+            { name: "Samir Tamang", party: "Shram Sanskriti", votes: "1,607", color: "#7c3aed", rank: 3 },
+          ]
+        },
+        {
+          name: "Rukum East-1",
+          status: "elected",
+          candidates: [
+            { name: "Pushpa Kamal Dahal", party: "NCP", votes: "10,240", color: "#cc0000", rank: 1 },
+            { name: "Lilamani Gautam", party: "CPN-UML", votes: "3,462", color: "#003893", rank: 2 },
+          ]
+        },
+      ],
 
-            noBtn.style.left = newX + 'px';
-            noBtn.style.top = newY + 'px';
-        }
+      provinces: [
+        { name: "Koshi", seats: 28 },
+        { name: "Madhesh", seats: 32 },
+        { name: "Bagmati", seats: 33 },
+        { name: "Gandaki", seats: 18 },
+        { name: "Lumbini", seats: 26 },
+        { name: "Karnali", seats: 12 },
+        { name: "Sudurpaschim", seats: 16 },
+      ],
 
-        // Mouse events
-        document.addEventListener('mousemove', (e) => {
-            handlePointerMove(e.clientX, e.clientY);
+      // Instagram post URLs (newest first)
+      instagramPosts: [
+        // "https://www.instagram.com/p/XXXXXX/"
+      ]
+    };
+
+    // ============================================================
+    // Rendering
+    // ============================================================
+    function render() {
+      document.getElementById("lastUpdated").textContent = "Updated: " + electionData.lastUpdated;
+      document.getElementById("declared").textContent = electionData.declared;
+      document.getElementById("declaredSub").textContent = `of ${electionData.totalFPTP} FPTP seats`;
+
+      const totalWon = electionData.parties.reduce((s, p) => s + p.won, 0);
+      const totalLeading = electionData.parties.reduce((s, p) => s + p.leading, 0);
+      document.getElementById("leadingCount").textContent = totalWon + totalLeading;
+
+      renderPartyTable();
+      renderMajorityBar();
+      renderConstituencies();
+      renderProvinces();
+      renderInstagram();
+    }
+
+    function renderPartyTable() {
+      const sorted = [...electionData.parties].sort((a, b) => (b.won + b.leading) - (a.won + a.leading));
+      const maxSeats = electionData.totalFPTP;
+      const tbody = document.getElementById("partyResults");
+      tbody.innerHTML = "";
+
+      sorted.forEach(p => {
+        const total = p.won + p.leading;
+        const pct = (total / maxSeats) * 100;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><span class="party-badge" style="background:${p.color}"></span>${p.name}</td>
+          <td><strong>${p.won}</strong></td>
+          <td>${p.leading}</td>
+          <td><strong>${total}</strong></td>
+          <td class="bar-cell">
+            <div class="bar-bg">
+              <div class="bar-fill" style="width:${pct}%;background:${p.color}">${total > 0 ? total : ''}</div>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderMajorityBar() {
+      const bar = document.getElementById("majorityBar");
+      const sorted = [...electionData.parties]
+        .sort((a, b) => (b.won + b.leading) - (a.won + a.leading))
+        .filter(p => (p.won + p.leading) > 0);
+
+      const total = sorted.reduce((s, p) => s + p.won + p.leading, 0);
+      bar.innerHTML = '<div class="majority-line"></div>';
+
+      sorted.forEach(p => {
+        const seats = p.won + p.leading;
+        const pct = (seats / 275) * 100;
+        const seg = document.createElement("div");
+        seg.className = "majority-segment";
+        seg.style.width = pct + "%";
+        seg.style.background = p.color;
+        if (pct > 5) seg.textContent = seats;
+        bar.appendChild(seg);
+      });
+    }
+
+    function renderConstituencies() {
+      const grid = document.getElementById("constituencyGrid");
+      grid.innerHTML = "";
+
+      electionData.constituencies.forEach(c => {
+        const statusClass = c.status === "elected" ? "status-elected" : c.status === "leading" ? "status-leading" : "status-counting";
+        const statusText = c.status === "elected" ? "Declared" : c.status === "leading" ? "Counting" : "Counting";
+
+        let html = `
+          <div class="constituency-card">
+            <div class="constituency-name">
+              ${c.name}
+              <span class="constituency-status ${statusClass}">${statusText}</span>
+            </div>
+        `;
+
+        c.candidates.forEach(cand => {
+          html += `
+            <div class="candidate-row">
+              <div class="candidate-info">
+                <div class="candidate-rank" style="background:${cand.color}">${cand.rank}</div>
+                <div>
+                  <div class="candidate-name">${cand.name}</div>
+                  <div class="candidate-party">${cand.party}</div>
+                </div>
+              </div>
+              <div class="candidate-votes">${cand.votes}</div>
+            </div>
+          `;
         });
 
-        // Touch events for mobile
-        document.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            handlePointerMove(touch.clientX, touch.clientY);
-        }, { passive: true });
+        html += `</div>`;
+        grid.innerHTML += html;
+      });
+    }
 
-        document.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            handlePointerMove(touch.clientX, touch.clientY);
-        }, { passive: true });
+    function renderProvinces() {
+      const grid = document.getElementById("provinceGrid");
+      grid.innerHTML = "";
 
-        // Prevent clicking the No button
-        noBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            moveButtonAway(e.clientX, e.clientY);
-        });
+      electionData.provinces.forEach(p => {
+        grid.innerHTML += `
+          <div class="province-card">
+            <div class="name">${p.name}</div>
+            <div class="seats">${p.seats}</div>
+            <div class="label">FPTP seats</div>
+          </div>
+        `;
+      });
+    }
 
-        noBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            if (e.changedTouches[0]) {
-                moveButtonAway(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-            }
-        });
+    function renderInstagram() {
+      const grid = document.getElementById("feedGrid");
+      grid.innerHTML = "";
 
-        function sayYes() {
-            questionSection.style.display = 'none';
-            congratsSection.style.display = 'flex';
-            noBtn.style.display = 'none';
-            createConfetti();
-        }
+      if (electionData.instagramPosts.length === 0) return;
 
-        function createConfetti() {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#88ff00'];
+      electionData.instagramPosts.forEach(url => {
+        const div = document.createElement("div");
+        div.className = "instagram-post";
+        div.innerHTML = `
+          <blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="width:100%;margin:0;padding:0;"></blockquote>
+        `;
+        grid.appendChild(div);
+      });
 
-            for (let i = 0; i < 100; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
-                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
-                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    document.body.appendChild(confetti);
+      if (window.instgrm) window.instgrm.Embeds.process();
+    }
 
-                    setTimeout(() => confetti.remove(), 4000);
-                }, i * 30);
-            }
-        }
-    </script>
+    // Tabs
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById("tab-" + tab.dataset.tab).classList.add("active");
+      });
+    });
+
+    // Instagram iframe will always be blocked, show fallback immediately
+    const instaFrame = document.getElementById("instaFrame");
+    const instaFallback = document.getElementById("instaFallback");
+    if (instaFrame && instaFallback) {
+      instaFrame.style.display = "none";
+      instaFallback.style.display = "block";
+    }
+
+    // Countdown timer
+    let remaining = 300;
+    setInterval(() => {
+      remaining--;
+      if (remaining <= 0) location.reload();
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      document.getElementById("countdown").textContent = m + ":" + String(s).padStart(2, "0");
+    }, 1000);
+
+    // Render
+    render();
+  </script>
 </body>
 </html>
